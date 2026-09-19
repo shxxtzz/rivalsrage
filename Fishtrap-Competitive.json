@@ -1,0 +1,16 @@
+{
+  "DFFlagTextureQualityOverrideEnabled": true,
+  "DFIntTextureQualityOverride": 1,
+  "DFIntCSGLevelOfDetailSwitchingDistance": 100,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL12": 75,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL23": 100,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL34": 150,
+  "FIntDebugForceMSAASamples": 1,
+  "FIntGrassMovementReducedMotionFactor": 0,
+  "DFFlagDebugPauseVoxelizer": true,
+  "FFlagDebugSkyGray": true,
+  "FIntTerrainArraySliceSize": 1,
+  "FFlagHandleAltEnterFullscreenManually": true,
+  "DFFlagDisableDPIScale": true,
+  "FFlagDebugGraphicsPreferD3D11": true
+}
