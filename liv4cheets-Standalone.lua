@@ -853,33 +853,58 @@ function ESP.Start(Utils, Config)
 			on(ts.TeleportInit:Connect(function() hideAll(); ESP.Destroy() end))
 		end
 	end)
-	on(Players.PlayerRemoving:Connect(dropPlayer))
-	do
-		local lp = Players.LocalPlayer
-		if lp then
-			on(lp.OnTeleport:Connect(function() hideAll(); ESP.Destroy() end))
-			if lp.Character then on(lp.CharacterRemoving:Connect(hideAll)) end
-			on(lp.CharacterAdded:Connect(function(ch)
-				ch.AncestryChanged:Connect(function()
-					if not ch:IsDescendantOf(game) then hideAll() end
-				end)
-			end))
+		if Players then
+			if Players.PlayerRemoving and Players.PlayerRemoving.Connect then
+				local c = Players.PlayerRemoving:Connect(dropPlayer)
+				if c then on(c) end
+			end
+			if Players.LocalPlayer then
+				local lp = Players.LocalPlayer
+				if lp then
+					if lp.OnTeleport and lp.OnTeleport.Connect then
+						local c = lp.OnTeleport:Connect(function() hideAll(); ESP.Destroy() end)
+						if c then on(c) end
+					end
+					if lp.Character and lp.CharacterRemoving and lp.CharacterRemoving.Connect then
+						local c = lp.CharacterRemoving:Connect(hideAll)
+						if c then on(c) end
+					end
+					if lp.CharacterAdded and lp.CharacterAdded.Connect then
+						local c = lp.CharacterAdded:Connect(function(ch)
+							if ch.AncestryChanged and ch.AncestryChanged.Connect then
+								ch.AncestryChanged:Connect(function()
+									if not ch:IsDescendantOf(game) then hideAll() end
+								end)
+							end
+						end)
+						if c then on(c) end
+					end
+				end
+			end
+			if Players.PlayerAdded and Players.PlayerAdded.Connect then
+				local c = Players.PlayerAdded:Connect(function(p)
+					if p.CharacterRemoving and p.CharacterRemoving.Connect then
+						local c2 = p.CharacterRemoving:Connect(function()
+							local e = cache[p]
+							if e then hide(e) end
+						end)
+						if c2 then on(c2) end
+					end)
+					if c then on(c) end
+				end
+			end
+			if Players:GetPlayers then
+				for _, p in ipairs(Players:GetPlayers()) do
+					if p ~= Players.LocalPlayer and p.CharacterRemoving and p.CharacterRemoving.Connect then
+						local c = p.CharacterRemoving:Connect(function()
+							local e = cache[p]
+							if e then hide(e) end
+						end)
+						if c then on(c) end
+					end
+				end
+			end
 		end
-	end
-	on(Players.PlayerAdded:Connect(function(p)
-		on(p.CharacterRemoving:Connect(function()
-			local e = cache[p]
-			if e then hide(e) end
-		end))
-	end))
-	for _, p in ipairs(Players:GetPlayers()) do
-		if p ~= Players.LocalPlayer then
-			on(p.CharacterRemoving:Connect(function()
-				local e = cache[p]
-				if e then hide(e) end
-			end))
-		end
-	end
 
 	local function chamsOn(ch, color, on)
 		local h = ch and ch:FindFirstChild("LIV4Chams")
