@@ -321,15 +321,17 @@ function UI.New()
 
 	function win:ApplyTheme(name)
 		local th = THEMES[name] or THEMES.Default
-		root.BackgroundColor3 = th.BG
-		rootStroke.Color = th.Stroke
+		if not root then return end
+		root.BackgroundColor3 = th.BG or root.BackgroundColor3
+		rootStroke.Color = th.Stroke or rootStroke.Color
 		for _, d in ipairs(root:GetDescendants()) do
-			if d.Name == "PanelBG" and d:IsA("GuiObject") then (d :: any).BackgroundColor3 = th.Panel
-			elseif d.Name == "CardBG" and d:IsA("GuiObject") then (d :: any).BackgroundColor3 = th.Card
-			elseif d.Name == "AccentBG" and d:IsA("GuiObject") then (d :: any).BackgroundColor3 = th.Accent
-			elseif d.Name == "MainText" and d:IsA("TextLabel") then (d :: any).TextColor3 = th.Text
-			elseif d.Name == "DimText" and d:IsA("TextLabel") then (d :: any).TextColor3 = th.Dim
-			elseif d.Name == "AccentLabel" then (d :: any).TextColor3 = th.AccentText end
+			if not d then continue end
+			if d.Name == "PanelBG" then pcall(function() d.BackgroundColor3 = th.Panel end) end
+			if d.Name == "CardBG" then pcall(function() d.BackgroundColor3 = th.Card end) end
+			if d.Name == "AccentBG" then pcall(function() d.BackgroundColor3 = th.Accent end) end
+			if d.Name == "MainText" then pcall(function() d.TextColor3 = th.Text end) end
+			if d.Name == "DimText" then pcall(function() d.TextColor3 = th.Dim end) end
+			if d.Name == "AccentLabel" then pcall(function() d.TextColor3 = th.AccentText end) end
 		end
 	end
 
@@ -364,18 +366,27 @@ function UI.New()
 		mk("UICorner", { CornerRadius = UDim.new(1, 0) }, sel)
 		hover(btn, T.Card)
 
-		local page = mk("ScrollingFrame", { Size = UDim2.new(1, 0, 1, -8), BackgroundTransparency = 1, ScrollBarThickness = 2, CanvasSize = UDim2.new(0, 0, 0, 0), AutomaticCanvasSize = Enum.AutomaticSize.Y, Visible = false }, content)
-		mk("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }, page)
+		local page = mk("ScrollingFrame", { Size = UDim2.new(1, 0, 1, -8), BackgroundTransparency = 1, ScrollBarThickness = 2, CanvasSize = UDim2.new(0, 0, 0, 0), Visible = false }, content)
+		local PageLayout = mk("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }, page)
+		page:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+			page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 8)
+		end)
 
 		local function select()
-			for _, p in ipairs(win._pages) do (p :: any).Visible = false end
+			for _, p in ipairs(win._pages) do p.Visible = false end
 			for _, b in ipairs(win._tabBtns) do
-				((b :: any):FindFirstChildOfClass("Frame") :: any).Visible = false
-				(b :: any).BackgroundColor3 = T.Card
+				local acc = b:FindFirstChildOfClass("Frame")
+				if acc then acc.Visible = false end
+				b.BackgroundColor3 = T.Card
 			end
 			page.Visible = true
 			sel.Visible = true
 			btn.BackgroundColor3 = T.Card:Lerp(T.Accent, 0.14)
+			task.defer(function()
+				if PageLayout then
+					page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 16)
+				end
+			end)
 		end
 		btn.Active = true
 		btn.MouseButton1Click:Connect(function()
@@ -950,7 +961,7 @@ function ESP.Start(Utils, Config)
 			local e = get(p)
 			local ch = p.Character
 			if not ch or not ch:IsDescendantOf(game) then hide(e); continue end
-			local hrp = ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+			local hrp = ch:FindFirstChild("HumanoidRootPart")
 			local hum = ch:FindFirstChildOfClass("Humanoid")
 			if not hrp or not hum or hum.Health <= 0 then hide(e); chamsOn(ch, Color3.new(1, 1, 1), false); continue end
 			if Utils.IsAlly(ch) and not v.ShowTeam then hide(e); chamsOn(ch, Color3.new(1, 1, 1), false); continue end
@@ -1032,7 +1043,7 @@ function Movement.Start(Utils, Config)
 		if not ex then return end
 		local lp = S.Players.LocalPlayer
 		local ch = lp and lp.Character
-		local r = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+		local r = ch and ch:FindFirstChild("HumanoidRootPart")
 		local h = ch and ch:FindFirstChildOfClass("Humanoid")
 		if not r or not h then return end
 		local fly = ex.Fly
@@ -1113,7 +1124,7 @@ function Ragebot.Start(Utils, Config)
 			if p == S.Players.LocalPlayer then continue end
 			local ch = p.Character
 			if not ch or not Utils.IsAlive(ch) or Utils.IsAlly(ch) then continue end
-			local hrp = ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+			local hrp = ch:FindFirstChild("HumanoidRootPart")
 			if hrp and cam then
 				local d = (hrp.Position - cam.CFrame.Position).Magnitude
 				if d < bd then bd, best = d, ch end
