@@ -846,7 +846,12 @@ function ESP.Start(Utils, Config)
 		for _, d in ipairs(allDrawings) do pcall(function() d:Remove() end) end
 		table.clear(allDrawings); table.clear(cache)
 	end
-	on(game:GetService("TeleportService").TeleportInit:Connect(function() hideAll(); ESP.Destroy() end))
+	pcall(function()
+		local ts = game:GetService("TeleportService")
+		if ts.TeleportInit then
+			on(ts.TeleportInit:Connect(function() hideAll(); ESP.Destroy() end))
+		end
+	end)
 	on(Players.PlayerRemoving:Connect(dropPlayer))
 	do
 		local lp = Players.LocalPlayer
