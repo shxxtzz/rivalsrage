@@ -264,7 +264,7 @@ function UI.New()
 	gui.ResetOnSpawn = false
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	gui.IgnoreGuiInset = true
-	protect(gui)
+	protect(gui);
 	(getgenv() :: any).LIV4UI = gui
 
 	local root = mk("Frame", { Name = "Root", Size = UDim2.fromOffset(640, 440), Position = UDim2.new(0.5, -320, 0.5, -220), BackgroundColor3 = T.BG, BorderSizePixel = 0, Active = true }, gui)
@@ -964,7 +964,7 @@ function ESP.Start(Utils, Config)
 				for _, L in ipairs(e.skel) do L.Visible = false end
 			end
 		end
-	end))
+	end));
 	(getgenv() :: any).LIV4ESP = ESP
 	return ESP
 end
@@ -1073,8 +1073,9 @@ function Ragebot.Start(Utils, Config)
 		local hb = Utils.GetHitPart(best, "Head")
 		if not hb then return end
 		n += 1
+		local rf = (remote :: RemoteEvent).FireServer
 		pcall(function()
-			(remote :: RemoteEvent):FireServer({ id = game:GetService("HttpService"):GenerateGUID(false), item = r.RageWeapon or r.WeaponName, position = hb.Position, attackNum = n })
+			rf({ id = game:GetService("HttpService"):GenerateGUID(false), item = r.RageWeapon or r.WeaponName, position = hb.Position, attackNum = n })
 		end)
 	end)
 	return Ragebot
@@ -1211,7 +1212,7 @@ function ConfigManager.Load(name)
 	if not ok then return "read failed" end
 	local ok2, t = pcall(function() return HS:JSONDecode(j) end)
 	if not ok2 or type(t) ~= "table" then return "decode failed" end
-	(getgenv() :: any).LIV4Config = restore(t)
+	(getgenv() :: any).LIV4Config = restore(t);
 	(getgenv() :: any).RivalsConfig = (getgenv() :: any).LIV4Config
 	return "loaded " .. name .. " (re-execute to apply fully)"
 end
