@@ -374,8 +374,14 @@ function UI.New()
 			sel.Visible = true
 			btn.BackgroundColor3 = T.Card:Lerp(T.Accent, 0.14)
 		end
-		btn.MouseButton1Click:Connect(select)
-		if #win._pages == 0 then page.Visible = true; sel.Visible = true end
+				btn.MouseButton1Click:Connect(function()
+	btn.MouseButton1Click:Connect(function()
+		print("[liv4] tab clicked:", name)
+		select()
+		end)
+	btn.MouseButton1Down:Connect(function()
+		print("[liv4] tab mousedown:", name)
+		end)
 		table.insert(win._pages, page)
 		table.insert(win._tabBtns, btn)
 
