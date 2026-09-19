@@ -890,8 +890,8 @@ function ESP.Start(Utils, Config)
 						end)
 						if c2 then on(c2) end
 					end
-					if c then on(c) end
 				end)
+				if c then on(c) end
 			end
 			if Players:GetPlayers then
 				for _, p in ipairs(Players:GetPlayers()) do
