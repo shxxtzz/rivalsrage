@@ -2090,19 +2090,18 @@ end
 
 return SkinChanger
 
-local Config = loadMod("Config.luau")
-local Utils = loadMod("Utils.luau")
-local UILib = loadMod("UI.luau")
-local AimMod = loadMod("Aimbot.luau")
-local SilentMod = loadMod("SilentAim.luau")
-local TrigMod = loadMod("Triggerbot.luau")
-local ESPMod = loadMod("ESP.luau")
-local MoveMod = loadMod("Movement.luau")
-local FXMod = loadMod("Effects.luau")
-local RageMod = loadMod("Ragebot.luau")
-local SpoofMod = loadMod("Spoofer.luau")
-local CMMod = loadMod("ConfigManager.luau")
-local SkinMod = loadMod("SkinChanger.luau")
+-- Bundle: all modules already defined above; alias them for Main section
+local UILib = UI
+local AimMod = Aimbot
+local SilentMod = SilentAim
+local TrigMod = Triggerbot
+local ESPMod = ESP
+local MoveMod = Movement
+local FXMod = Effects
+local RageMod = Ragebot
+local SpoofMod = Spoofer
+local CMMod = ConfigManager
+local SkinMod = SkinChanger
 if not Config or not Utils then
 	error("[liv4] Config/Utils missing")
 end
