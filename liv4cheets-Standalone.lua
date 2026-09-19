@@ -893,7 +893,7 @@ function ESP.Start(Utils, Config)
 				end)
 				if c then on(c) end
 			end
-			if Players:GetPlayers then
+			if Players:GetPlayers() then
 				for _, p in ipairs(Players:GetPlayers()) do
 					if p ~= Players.LocalPlayer and p.CharacterRemoving and p.CharacterRemoving.Connect then
 						local c = p.CharacterRemoving:Connect(function()
