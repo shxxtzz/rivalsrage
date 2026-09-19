@@ -357,6 +357,9 @@ function UI.New()
 		local btn = mk("TextButton", { Name = "CardBG", Text = name, Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = T.Card, TextColor3 = T.Text, Font = Enum.Font.GothamMedium, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, AutoButtonColor = false, BorderSizePixel = 0 }, side)
 		mk("UICorner", { CornerRadius = UDim.new(0, 10) }, btn)
 		mk("UIPadding", { PaddingLeft = UDim.new(0, 20) }, btn)
+		btn.Active = true
+		btn.Selectable = false
+		btn.AutoButtonColor = false
 		local sel = mk("Frame", { Name = "AccentBG", Size = UDim2.new(0, 3, 0, 22), Position = UDim2.new(0, 6, 0.5, -11), BackgroundColor3 = T.Accent, BorderSizePixel = 0, Visible = false }, btn)
 		mk("UICorner", { CornerRadius = UDim.new(1, 0) }, sel)
 		hover(btn, T.Card)
@@ -374,12 +377,17 @@ function UI.New()
 			sel.Visible = true
 			btn.BackgroundColor3 = T.Card:Lerp(T.Accent, 0.14)
 		end
+		btn.Active = true
 		btn.MouseButton1Click:Connect(function()
 			print("[liv4] tab clicked:", name)
 			select()
 		end)
 		btn.MouseButton1Down:Connect(function()
 			print("[liv4] tab mousedown:", name)
+		end)
+		btn.Activated:Connect(function()
+			print("[liv4] tab activated:", name)
+			select()
 		end)
 		if #win._pages == 0 then page.Visible = true; sel.Visible = true end
 		table.insert(win._pages, page)
