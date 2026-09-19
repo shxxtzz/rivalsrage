@@ -893,8 +893,9 @@ function ESP.Start(Utils, Config)
 				end)
 				if c then on(c) end
 			end
-			if Players:GetPlayers() then
-				for _, p in ipairs(Players:GetPlayers()) do
+			local playersList = Players and Players:GetPlayers and Players:GetPlayers() or {}
+			if #playersList > 0 then
+				for _, p in ipairs(playersList) do
 					if p ~= Players.LocalPlayer and p.CharacterRemoving and p.CharacterRemoving.Connect then
 						local c = p.CharacterRemoving:Connect(function()
 							local e = cache[p]
