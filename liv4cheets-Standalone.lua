@@ -893,7 +893,11 @@ function ESP.Start(Utils, Config)
 				end)
 				if c then on(c) end
 			end
-			local playersList = Players and Players:GetPlayers and Players:GetPlayers() or {}
+			local playersList = {}
+			if Players then
+				local ok, result = pcall(function() return Players:GetPlayers() end)
+				if ok and result then playersList = result end
+			end
 			if #playersList > 0 then
 				for _, p in ipairs(playersList) do
 					if p ~= Players.LocalPlayer and p.CharacterRemoving and p.CharacterRemoving.Connect then
