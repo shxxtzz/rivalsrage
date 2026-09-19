@@ -116,7 +116,8 @@ Config.Current = getgenv().LIV4Config
 ----------------------------------------------------------------------
 local Utils = {}
 local function cref<T>(inst)
-	local f = (getgenv() :: any).cloneref or rawget(_G, "cloneref")
+	local g = getgenv()
+	local f = (g and (g :: any).cloneref) or rawget(_G, "cloneref")
 	if type(f) == "function" then
 		local ok, out = pcall(f, inst)
 		if ok and out then return out end
